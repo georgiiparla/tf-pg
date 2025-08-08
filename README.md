@@ -1,2 +1,6 @@
-# tf-pg
-Is to create CI/CD
+This example uses a simple maven based webapp project.
+
+For build use : mvn clean package
+
+Test
+
