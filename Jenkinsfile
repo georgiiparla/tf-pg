@@ -5,6 +5,12 @@ pipeline{
         maven 'maven'
     }
 
+    environment {
+        artifactId = readMavenPom().getArtifactId()
+        version = readMavenPom().getVersion()
+        name = readMavenPom().getName()
+    }
+
     stages {
         // Specify various stage with in stages
 
@@ -32,7 +38,7 @@ pipeline{
         }
 
         // Stage3 : Publish the source code to Sonarqube
-        stage ('Sonarqube Analysis'){
+        stage ('Deploy'){
             steps {
                 // echo ' Source code published to Sonarqube for SCA......'
                 // withSonarQubeEnv('sonarqube'){ // You can override the credential to be used
