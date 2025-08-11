@@ -9,6 +9,7 @@ pipeline{
         ArtifactId = readMavenPom().getArtifactId()
         Version = readMavenPom().getVersion()
         Name = readMavenPom().getName()
+        GroupId = readMavenPom().getGroupId()
     }
 
     stages {
@@ -34,7 +35,7 @@ pipeline{
                 echo "Artifact ID: '{$ArtifactId}'"
                 echo "Version: '{$Version}'"
                 echo "Name: '{$Name}'"
-                echo "Group ID: '{}'"
+                echo "Group ID: '{$GroupId}'"
             }
         }
 
@@ -42,7 +43,26 @@ pipeline{
 
         stage('Publish to Nexus') {
             steps {
-                nexusArtifactUploader artifacts: [[artifactId: 'VinayDevOpsLab', classifier: '', file: 'target/VinayDevOpsLab-0.0.8.war', type: 'war']], credentialsId: '7d196d2f-f3c1-4803-bde9-2d17d18776b3', groupId: 'com.vinaysdevopslab', nexusUrl: '172.20.10.25:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'Lab-RELEASE', version: '0.0.8'
+                nexusArtifactUploader artifacts: [
+                    [
+                        // Use the variable for the artifact ID
+                        artifactId: "${ArtifactId}", 
+                        
+                        classifier: '', 
+                        
+                        // Build the file path dynamically from the variables
+                        file: "target/${ArtifactId}-${Version}.war", 
+
+                        type: 'war'
+                    ]
+                ], 
+                credentialsId: '7d196d2f-f3c1-4803-bde9-2d17d18776b3', 
+                groupId: "${GroupId}", 
+                nexusUrl: '172.20.10.25:8081', 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: 'Lab-RELEASE', 
+                version: "${Version}"
             }
         }
 
